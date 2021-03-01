@@ -12,4 +12,10 @@ Follow Installation Guide and Quick Start Guide for instructions
 
 ` pip install .`
 
+4. Test the installation anywhere on your Machine by running
+
+` import neural_network_package as nnp`
+
+` nnp.test()`
+
 ## Quick Start Guide
