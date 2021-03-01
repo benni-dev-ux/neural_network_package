@@ -1,0 +1,18 @@
+__pycache__/
+mnist/
+.ipynb_checkpoints
+.idea
+.vs
+Pipfile.lock
+.DS_Store
+models
+performance_results.csv
+
+# Compiled python modules.
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
