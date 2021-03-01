@@ -7,7 +7,7 @@ Follow Installation Guide and Quick Start Guide for instructions
 ## Installation Guide
 
 1. Clone Repository
-2. Navigate to Module 'framework-package'
+2. Navigate to Module 'neural_network_package'
 3. Run command to install package locally
 
 ` pip install .`
