@@ -40,7 +40,7 @@ class NeuralNetwork(object):
         # return activations in reverse order, so output is at 0
         return activations[::-1]
 
-    def back_prop(self, x, y, activations, soft_activation):
+    def back_prop(self, x, y, thetas, activations, soft_activation):
         """
         Backwards propagates the NN
         Parameters:
@@ -62,13 +62,13 @@ class NeuralNetwork(object):
         gradient = activations[1].T @ delta / num_samples
         gradient_list.append(gradient)
         # hidden layers
-        for layer in range(1, len(self.thetas), 1):
+        for layer in range(1, len(thetas), 1):
             # current activations without bias column
             curr_activation = activations[layer][:, 1:]
             # previous activations with bias column
             prev_activation = activations[layer + 1].T
             # current theta without bias column
-            curr_theta = self.thetas[-layer][1:].T
+            curr_theta = thetas[-layer][1:].T
             sig_derivative = (curr_activation * (1 - curr_activation))
 
             delta = delta @ curr_theta * sig_derivative
@@ -96,7 +96,7 @@ class NeuralNetwork(object):
         accuracy_history = []
 
         for _ in tqdm(range(iterations)):
-            activations = forward_prop(x, trained_thetas)
+            activations = self.forward_prop(x)
             soft_activation_output = softmax(activations[0])
             accuracy_history.append(
                 accuracy_multiclass(soft_activation_output, y))
@@ -104,8 +104,8 @@ class NeuralNetwork(object):
             error = categorical_cross_entropy(soft_activation_output, y).mean()
             error_history.append(error)
 
-            gradients = back_prop(x, y, trained_thetas,
-                                  activations, soft_activation_output)
+            gradients = self.back_prop(x, y, trained_thetas,
+                                       activations, soft_activation_output)
 
             # update thetas
             for idx in range(len(trained_thetas)):
