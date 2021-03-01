@@ -34,7 +34,7 @@ class NeuralNetwork(object):
             activations.append(prev_activation)
 
         # Output layer without bias
-        prev_activation = sigmoid(prev_activation @ self.thetas[-1])
+        prev_activation = prev_activation @ self.thetas[-1]
         activations.append(prev_activation)
 
         # return activations in reverse order, so output is at 0
@@ -55,9 +55,7 @@ class NeuralNetwork(object):
         num_samples = len(x)
 
         # output layer
-        sig_derivative = activations[0] * (1 - activations[0])
-
-        delta = (soft_activation - y) * sig_derivative
+        delta = (soft_activation - y)
 
         gradient = activations[1].T @ delta / num_samples
         gradient_list.append(gradient)
