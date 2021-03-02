@@ -29,9 +29,9 @@ X = nnp.add_bias_column(X_train_scaled)
 Y = np.identity(10, dtype=int)[labels_train]
 
 # %% Running the NeuralNet
-num_samples = 1000
-alpha = 2
-iterations = 1000
+num_samples = 60000
+alpha = 10
+iterations = 100
 
 # initialize a new neural net
 neural_net = nnp.NeuralNetwork([784, 20, 10])
@@ -41,3 +41,7 @@ error_history, accuracy_history, gradients, softmax = neural_net.train(
 
 print("Accuracy ", accuracy_history[-1])
 print("Error ", error_history[-1])
+
+# %% Plot Data to image
+nnp.plot_history_to_image(error_history, "ERROR", "MNIST_Error.jpg")
+nnp.plot_history_to_image(accuracy_history, "ACCURACY", "MNIST_Accuracy.jpg")

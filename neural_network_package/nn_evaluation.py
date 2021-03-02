@@ -3,20 +3,20 @@ import numpy as np
 import seaborn as sns
 
 
-def plot_error_history_to_image(error_history, filename):
+def plot_history_to_image(history, title, filename):
     """
     plots error history to an image file
     filename: name for saved image
     """
     fig, ax = plt.subplots()
-    ax.plot(error_history, label="Cross Entropy")
+    ax.plot(history, label=title)
     # "zoom in" on 90% of the values:
     # upper_ylim = np.quantile(error_history, 0.99)
     # ax.set_ylim(-0.001, upper_ylim)
 
     ax.set_xlabel("Iterations")
-    ax.set_ylabel("Error")
-    ax.set_title("Learning Curve")
+    ax.set_ylabel(title)
+    ax.set_title(title)
     fig.legend()
     fig.savefig(filename)
 
@@ -36,8 +36,10 @@ def f1_score(h, y):
     false_positives = (h == 1) & (y == 0)
     false_negatives = (h == 0) & (y == 1)
 
-    precision = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_positives))
-    recall = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_negatives))
+    precision = np.sum(true_positives) / \
+        (np.sum(true_positives) + np.sum(false_positives))
+    recall = np.sum(true_positives) / \
+        (np.sum(true_positives) + np.sum(false_negatives))
 
     f1 = 2 * (precision * recall) / (precision + recall)
     return f1
@@ -58,8 +60,10 @@ def plot_confusion_matrix(h, y):
     # visualize the confusion matrix
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    labels = ["true negatives\n %d", "false negatives\n %d", "false positives\n %d", "true positives\n %d"]
-    label_values = np.array([l % v for l, v in zip(labels, confusion_matrix.flat)]).reshape(2, 2)
+    labels = ["true negatives\n %d", "false negatives\n %d",
+              "false positives\n %d", "true positives\n %d"]
+    label_values = np.array([l % v for l, v in zip(
+        labels, confusion_matrix.flat)]).reshape(2, 2)
 
     sns.heatmap(confusion_matrix, annot=label_values, fmt="", ax=ax)
     ax.set_xlabel("ground truth")
