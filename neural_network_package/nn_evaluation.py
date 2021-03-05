@@ -30,33 +30,31 @@ def accuracy_multiclass(h, y):
 
 
 def f1_score(h, y):
+    feature_list = np.arange(len(y[0]))
     h = h.argmax(axis=1)
-    h = np.identity(10, dtype=int)[h]
-    true_positives = (h == 1) & (y == 1)
-    false_positives = (h == 1) & (y == 0)
-    false_negatives = (h == 0) & (y == 1)
+    y = y.argmax(axis=1)
+    true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y,
+                                                                                                              feature_list)
 
-    precision = np.sum(true_positives) / \
-        (np.sum(true_positives) + np.sum(false_positives))
-    recall = np.sum(true_positives) / \
-        (np.sum(true_positives) + np.sum(false_negatives))
+    precision = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_positives))
+    recall = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_negatives))
 
     f1 = 2 * (precision * recall) / (precision + recall)
     return f1
 
 
 def plot_confusion_matrix(h, y):
+    feature_list = np.arange(len(y[0]))
     h = h.argmax(axis=1)
-    h = np.identity(10, dtype=int)[h]
+    y = y.argmax(axis=1)
 
-    true_positives = (h == 1) & (y == 1)
-    false_positives = (h == 1) & (y == 0)
-    true_negatives = (h == 0) & (y == 0)
-    false_negatives = (h == 0) & (y == 1)
+    true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y,
+                                                                                                              feature_list)
 
     confusion_matrix = np.array([[true_negatives.sum(), false_negatives.sum()],
                                  [false_positives.sum(), true_positives.sum()]]).astype(int)
 
+    confusion_matrix = confusion_matrix / len(h) * 100
     # visualize the confusion matrix
     fig, ax = plt.subplots(figsize=(10, 8))
 
@@ -74,3 +72,18 @@ def plot_confusion_matrix(h, y):
     bottom, top = ax.get_ylim()
     ax.set_ylim(bottom + 0.5, top - 0.5)
     plt.show()
+
+
+def determine_true_false_positive_negative(h, y, features):
+    true_positives = 0
+    false_positives = 0
+    true_negatives = 0
+    false_negatives = 0
+
+    for feature in features:
+        true_positives += (h == feature) & (y == feature)
+        false_positives += (h == feature) & (y != feature)
+        true_negatives += (h != feature) & (y != feature)
+        false_negatives += (h != feature) & (y == feature)
+
+    return true_positives, false_positives, true_negatives, false_negatives
