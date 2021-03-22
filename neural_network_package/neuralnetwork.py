@@ -13,9 +13,14 @@ class NeuralNetwork(object):
     Neural Network
     '''
 
-    def __init__(self, shape):
+    def __init__(self, shape, thetas):
         self.shape = shape
-        self.thetas = initialize_random_thetas(shape)
+
+       # Create random thetas if there are none
+        if thetas is None:
+            self.thetas = initialize_random_thetas(shape)
+        else:
+            self.thetas = thetas
 
     def forward_prop(self, x):
         """
@@ -110,3 +115,10 @@ class NeuralNetwork(object):
                 trained_thetas[-(idx + 1)] -= alpha * gradients[idx]
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
+
+    def predict(self, x):
+        """
+        Predicts Y from given X and existing thetas
+        """
+        activations = self.forward_prop(x)
+        return softmax(activations[-1])
