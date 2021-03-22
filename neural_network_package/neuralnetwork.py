@@ -13,7 +13,7 @@ class NeuralNetwork(object):
     Neural Network
     '''
 
-    def __init__(self, shape, thetas):
+    def __init__(self, shape, thetas=None):
         self.shape = shape
 
        # Create random thetas if there are none
