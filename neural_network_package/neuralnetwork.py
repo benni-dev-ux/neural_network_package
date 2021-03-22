@@ -119,6 +119,10 @@ class NeuralNetwork(object):
     def predict(self, x):
         """
         Predicts Y from given X and existing thetas
+        -----------
+        X: Input layer
+        returns: softmax of the output layer
+
         """
         activations = self.forward_prop(x)
         return softmax(activations[0])
