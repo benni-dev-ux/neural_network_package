@@ -121,4 +121,4 @@ class NeuralNetwork(object):
         Predicts Y from given X and existing thetas
         """
         activations = self.forward_prop(x)
-        return softmax(activations[-1])
+        return softmax(activations[0])
