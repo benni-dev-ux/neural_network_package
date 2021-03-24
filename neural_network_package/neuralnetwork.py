@@ -81,7 +81,7 @@ class NeuralNetwork(object):
 
         return gradient_list
 
-    def train(self, x, y, alpha, iterations, lamda_value=0):
+    def train(self, x, y, alpha, iterations, lamda_value=0, beta_val=0):
         """
         Trains the NN through backpropagation
         X: Input layer
@@ -99,6 +99,11 @@ class NeuralNetwork(object):
         accuracy_history = []
         num_samples = len(x)
 
+        # initialize velocity for momentum
+        velocity_list = self.thetas.copy()
+        for idx in range(len(velocity_list)):
+            velocity_list[idx] = np.zeros(velocity_list[idx].shape)
+
         for _ in tqdm(range(iterations)):
             activations = self.forward_prop(x)
             soft_activation_output = softmax(activations[0])
@@ -113,7 +118,10 @@ class NeuralNetwork(object):
 
             # update thetas
             for idx in range(len(trained_thetas)):
-                trained_thetas[-(idx + 1)] -= alpha * (gradients[idx] + lamda_value/num_samples * trained_thetas[-(idx + 1)])
+                velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
+                                                     lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
+                                                     beta_val * velocity_list[-(idx + 1)]
+                trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
 
