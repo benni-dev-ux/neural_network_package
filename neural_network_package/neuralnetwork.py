@@ -81,7 +81,7 @@ class NeuralNetwork(object):
 
         return gradient_list
 
-    def train(self, x, y, alpha, iterations):
+    def train(self, x, y, alpha, iterations, lamda_value=0):
         """
         Trains the NN through backpropagation
         X: Input layer
@@ -97,6 +97,7 @@ class NeuralNetwork(object):
 
         error_history = []
         accuracy_history = []
+        num_samples = len(x)
 
         for _ in tqdm(range(iterations)):
             activations = self.forward_prop(x)
@@ -112,7 +113,7 @@ class NeuralNetwork(object):
 
             # update thetas
             for idx in range(len(trained_thetas)):
-                trained_thetas[-(idx + 1)] -= alpha * gradients[idx]
+                trained_thetas[-(idx + 1)] -= alpha * (gradients[idx] + lamda_value/num_samples * trained_thetas[-(idx + 1)])
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
 
