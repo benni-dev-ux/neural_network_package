@@ -29,6 +29,8 @@ class NeuralNetwork(object):
         Parameters:
         -----------
         X: Input layer
+
+        returns activations list
         """
         activations = []
         prev_activation = x
@@ -54,6 +56,8 @@ class NeuralNetwork(object):
         Y: Outputs
         activations: Activations from forward Prop
         soft_activation: softmax of output layer
+
+        returns gradients list
         """
         activations.append(x)
         gradient_list = []
@@ -88,8 +92,10 @@ class NeuralNetwork(object):
         Y: Outputs
         alpha: learning rate
         iterations: iterations
+        lambda_value: optional value, adds regularization
+        beta_value: optional value, adds momentum, should be between 0.5 and 0.99
 
-        returns: trained thetas
+        returns: error_history, accuracy_history, trained_thetas, soft_activation_output
 
         """
 
