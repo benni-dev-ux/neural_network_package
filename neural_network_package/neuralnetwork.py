@@ -15,12 +15,23 @@ class NeuralNetwork(object):
 
     def __init__(self, shape, thetas=None):
         self.shape = shape
+        self.activation_function_name = 'sigmoid'
 
-       # Create random thetas if there are none
+        # Create random thetas if there are none
         if thetas is None:
             self.thetas = initialize_random_thetas(shape)
         else:
             self.thetas = thetas
+
+    def set_activation_function(self, activation_function_name):
+        """
+        set activation function to a specific function, otherwise sigmoid
+
+        Parameters:
+        -----------
+        activation_function_name: 'sigmoid', 'relu' or 'tanh
+        """
+        self.activation_function_name = activation_function_name
 
     def forward_prop(self, x):
         """
@@ -32,22 +43,26 @@ class NeuralNetwork(object):
 
         returns activations list
         """
+        z_list = []
         activations = []
         prev_activation = x
         for t in range(len(self.thetas) - 1):
-            a = sigmoid(prev_activation @ self.thetas[t])
+            z = prev_activation @ self.thetas[t]
+            a = ACTIVATION_FUNCTION[self.activation_function_name](z)
             # insert bias at first position of array
             prev_activation = np.c_[np.ones(len(a)), a]
+            z_list.append(z)
             activations.append(prev_activation)
 
         # Output layer without bias
         prev_activation = prev_activation @ self.thetas[-1]
         activations.append(prev_activation)
+        z_list.append(prev_activation)
 
         # return activations in reverse order, so output is at 0
-        return activations[::-1]
+        return activations[::-1], z_list[::-1]
 
-    def back_prop(self, x, y, thetas, activations, soft_activation):
+    def back_prop(self, x, y, thetas, activations, soft_activation, z_list):
         """
         Backwards propagates the NN
         Parameters:
@@ -70,15 +85,17 @@ class NeuralNetwork(object):
         gradient_list.append(gradient)
         # hidden layers
         for layer in range(1, len(thetas), 1):
-            # current activations without bias column
+            # current activations/ z without bias column
             curr_activation = activations[layer][:, 1:]
+            curr_z = z_list[layer]
             # previous activations with bias column
             prev_activation = activations[layer + 1].T
             # current theta without bias column
             curr_theta = thetas[-layer][1:].T
-            sig_derivative = (curr_activation * (1 - curr_activation))
 
-            delta = delta @ curr_theta * sig_derivative
+            activation_derivate = ACTIVATION_FUNCTION_DERIV[self.activation_function_name](curr_z)
+
+            delta = delta @ curr_theta * activation_derivate
 
             gradient = prev_activation @ delta / num_samples
             gradient_list.append(gradient)
@@ -111,7 +128,7 @@ class NeuralNetwork(object):
             velocity_list[idx] = np.zeros(velocity_list[idx].shape)
 
         for _ in tqdm(range(iterations)):
-            activations = self.forward_prop(x)
+            activations, z_list = self.forward_prop(x)
             soft_activation_output = softmax(activations[0])
             accuracy_history.append(
                 accuracy_multiclass(soft_activation_output, y))
@@ -120,7 +137,7 @@ class NeuralNetwork(object):
             error_history.append(error)
 
             gradients = self.back_prop(x, y, trained_thetas,
-                                       activations, soft_activation_output)
+                                       activations, soft_activation_output, z_list)
 
             # update thetas
             for idx in range(len(trained_thetas)):
@@ -131,7 +148,7 @@ class NeuralNetwork(object):
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
 
-    def predict(self, x):
+    def predict(self, x, activation_function_name):
         """
         Predicts Y from given X and existing thetas
         -----------

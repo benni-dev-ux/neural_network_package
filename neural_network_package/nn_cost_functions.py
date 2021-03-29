@@ -15,4 +15,11 @@ def categorical_cross_entropy(h, y_one_hot):
 
 def softmax(o):
     """ Softmax converts arbitrary outputs into probabilities with a sum of 1"""
-    return np.e ** o / np.sum(np.e ** o, axis=1)[:, np.newaxis]
+    # normalize Data, otherwise too big to compute e**inf -> inf
+    o_norm = o - np.nanmax(o, axis=1).reshape(-1, 1)
+    exp = np.e ** o_norm
+    sum_all = np.sum(exp, axis=1)[:, np.newaxis]
+    # clip, otherwise problems with .../0, but should not be necessary
+    sum_all = np.clip(sum_all, a_min=0.000000001, a_max=None)
+    return exp / sum_all
+
