@@ -156,5 +156,5 @@ class NeuralNetwork(object):
         returns: softmax of the output layer
 
         """
-        activations = self.forward_prop(x)
+        activations, z_list = self.forward_prop(x)
         return softmax(activations[0])
