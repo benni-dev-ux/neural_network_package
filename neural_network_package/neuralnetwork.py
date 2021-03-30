@@ -29,7 +29,7 @@ class NeuralNetwork(object):
 
         Parameters:
         -----------
-        activation_function_name: 'sigmoid', 'relu' or 'tanh
+        activation_function_name: 'sigmoid', 'relu' or 'tanh'
         """
         self.activation_function_name = activation_function_name
 
