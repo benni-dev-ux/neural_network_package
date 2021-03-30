@@ -148,7 +148,7 @@ class NeuralNetwork(object):
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
 
-    def predict(self, x, activation_function_name):
+    def predict(self, x):
         """
         Predicts Y from given X and existing thetas
         -----------
