@@ -34,3 +34,21 @@ class NormalScaler:
 
     def inverse_transform(self, x_scaled):
         return x_scaled * self.max + self.min
+
+
+def center_data(dataframe, x_names, y_names, anchor_name_x, anchor_name_y):
+    """
+    Center data in dataframe around an anchor (feature)
+    -----------
+    dataframe: data as dataframe to be centered
+    x_names: list of features - only x coordinates
+    y_names: list of features - only y coordinates
+    anchor_name_x: name of feature to be centered around - only x coordinates
+    anchor_name_y: name of feature to be centered around - only y coordinates
+    returns: centered data around anchor
+    """
+
+    out = dataframe[x_names].sub(dataframe[anchor_name_x], axis=0)
+    out[y_names] = dataframe[y_names].sub(dataframe[anchor_name_y], axis=0)
+
+    return out
