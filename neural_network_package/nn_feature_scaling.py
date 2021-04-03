@@ -3,6 +3,7 @@ class StandardScaler:
     """
     Centers Data Around zero
     with Standard Derivation of 1
+    more robust with outliers
     """
     def fit(self, x):
         self.mean = x.mean(axis=0)
