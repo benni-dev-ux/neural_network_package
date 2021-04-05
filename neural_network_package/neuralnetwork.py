@@ -127,19 +127,19 @@ class NeuralNetwork(object):
         for idx in range(len(velocity_list)):
             velocity_list[idx] = np.zeros(velocity_list[idx].shape)
 
+        num_features = x.shape[1]
         mini_batches = self._create_batches(x, y, batch_size) #creating batches
         print("data shape:", mini_batches.shape)
 
         for _ in tqdm(range(iterations)):
 
-            activations = None #saving activations to access after each iteration for every batch
             accuracy_for_batch = []
             error_for_batch = []
 
             np.random.shuffle(mini_batches)
             for mini_batch in mini_batches:
-                x_batch = mini_batch[:, :9] #slice only columns (first 9) of one hot vector
-                y_batch = mini_batch[:, 9:] #slice starting at 10th
+                x_batch = mini_batch[:, :num_features]
+                y_batch = mini_batch[:, num_features:]
                 activations, z_list = self.forward_prop(x_batch)
                 soft_activation_output = softmax(activations[0])
                 accuracy_for_batch.append(accuracy_multiclass(soft_activation_output, y_batch))
