@@ -129,7 +129,6 @@ class NeuralNetwork(object):
 
         num_features = x.shape[1]
         mini_batches = self._create_batches(x, y, batch_size) #creating batches
-        print("data shape:", mini_batches.shape)
 
         for _ in tqdm(range(iterations)):
 
