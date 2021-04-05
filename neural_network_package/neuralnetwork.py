@@ -102,20 +102,20 @@ class NeuralNetwork(object):
 
         return gradient_list
 
-    def train(self, x, y, alpha, iterations, lamda_value=0, beta_val=0):
+    def train(self, x, y, alpha, batch_size=32, iterations=100, lamda_value=0, beta_val=0):
         """
         Trains the NN through backpropagation
         X: Input layer
         Y: Outputs
         alpha: learning rate
         iterations: iterations
+        batch: chunks of data going through
         lambda_value: optional value, adds regularization
         beta_value: optional value, adds momentum, should be between 0.5 and 0.99
 
         returns: error_history, accuracy_history, trained_thetas, soft_activation_output
 
         """
-
         trained_thetas = self.thetas.copy()
 
         error_history = []
@@ -127,24 +127,38 @@ class NeuralNetwork(object):
         for idx in range(len(velocity_list)):
             velocity_list[idx] = np.zeros(velocity_list[idx].shape)
 
+        mini_batches = self._create_batches(x, y, batch_size) #creating batches
+        print("data shape:", mini_batches.shape)
+
         for _ in tqdm(range(iterations)):
-            activations, z_list = self.forward_prop(x)
-            soft_activation_output = softmax(activations[0])
-            accuracy_history.append(
-                accuracy_multiclass(soft_activation_output, y))
 
-            error = categorical_cross_entropy(soft_activation_output, y).mean()
-            error_history.append(error)
+            activations = None #saving activations to access after each iteration for every batch
+            accuracy_for_batch = []
+            error_for_batch = []
 
-            gradients = self.back_prop(x, y, trained_thetas,
-                                       activations, soft_activation_output, z_list)
+            np.random.shuffle(mini_batches)
+            for mini_batch in mini_batches:
+                x_batch = mini_batch[:, :9] #slice only columns (first 9) of one hot vector
+                y_batch = mini_batch[:, 9:] #slice starting at 10th
+                activations, z_list = self.forward_prop(x_batch)
+                soft_activation_output = softmax(activations[0])
+                accuracy_for_batch.append(accuracy_multiclass(soft_activation_output, y_batch))
 
-            # update thetas
-            for idx in range(len(trained_thetas)):
-                velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
+                error = categorical_cross_entropy(soft_activation_output, y_batch).mean()
+                error_for_batch.append(error)
+
+                gradients = self.back_prop(x_batch, y_batch, trained_thetas,
+                                               activations, soft_activation_output, z_list)
+
+                # update thetas
+                for idx in range(len(trained_thetas)):
+                    velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
                                                      lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
-                                                     beta_val * velocity_list[-(idx + 1)]
-                trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
+                                            beta_val * velocity_list[-(idx + 1)]
+                    trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
+
+            accuracy_history.append(np.mean(accuracy_for_batch))
+            error_history.append(np.mean(error_for_batch))
 
         return error_history, accuracy_history, trained_thetas, soft_activation_output
 
@@ -158,3 +172,14 @@ class NeuralNetwork(object):
         """
         activations, z_list = self.forward_prop(x)
         return softmax(activations[0])
+
+    @staticmethod
+    def _create_batches(x, y, batch_size):  # private method to create batches
+        data = np.hstack((x, y))
+        batches = []
+
+        data_l = len(data)
+        for index in range(0, data_l, batch_size):
+            batches.append(data[index:min(index + batch_size, data_l)]) #create batches with certain size, if not enough data available for last batch create batch with less data
+
+        return np.array(batches)

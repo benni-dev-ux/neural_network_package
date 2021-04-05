@@ -2,12 +2,13 @@
 import neural_network_package as nnp
 import numpy as np
 import pandas as pd
-import easygui
+import matplotlib.pyplot as plt
+#import easygui
 import pickle
 
 
 # Load via file picker:
-TESTDATA_FILE_PATH = 'C:/Users/sandr/Documents\Master/2 ML/neural_net_gesture_detection.git/training_data/csvs/with_truth/combined_csv.csv'#easygui.fileopenbox()
+TESTDATA_FILE_PATH = 'C:/Users/Lora/Documents/ML/neural_net_gesture_detection/training_data/csvs/training_sets/own_combined_all_old.csv'#easygui.fileopenbox()
 
 
 frames = pd.read_csv(TESTDATA_FILE_PATH)
@@ -43,15 +44,23 @@ neural_net = nnp.NeuralNetwork([8, 20, 20, 10])
 
 # Define Optimisation Parameters
 num_samples = len(X)
-alpha = 3
+alpha = 0.3
 iterations = 100
+batch_size = 16
 lambda_value = 0.3
 beta_value = 0.95  # should be between 0.5 and 0.99
 
 # train the Neural Net
 error_history, accuracy_history, trained_thetas, softmax = neural_net.train(
-    X_scaled[:num_samples], Y[:num_samples], alpha, iterations, lambda_value, beta_value)
+    X_scaled[:num_samples], Y[:num_samples], alpha, batch_size, iterations, lambda_value, beta_value)
 
 #%% print
+#plotting accuracy and error history for test
+fig, (ax1, ax2) = plt.subplots(2, 1)
+ax1.plot(np.arange(iterations), accuracy_history)
+ax1.set(title="Accuracy history")
 
-print(accuracy_history[-1])
+ax2.plot(np.arange(iterations), error_history)
+ax2.set(title="Error history")
+
+plt.show()
