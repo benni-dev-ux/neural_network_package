@@ -181,4 +181,4 @@ class NeuralNetwork(object):
         for index in range(0, data_l, batch_size):
             batches.append(data[index:min(index + batch_size, data_l)]) #create batches with certain size, if not enough data available for last batch create batch with less data
 
-        return np.array(batches)
+        return np.array(batches, dtype=object)
