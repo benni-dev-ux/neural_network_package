@@ -93,7 +93,8 @@ class NeuralNetwork(object):
             # current theta without bias column
             curr_theta = thetas[-layer][1:].T
 
-            activation_derivate = ACTIVATION_FUNCTION_DERIV[self.activation_function_name](curr_z)
+            activation_derivate = ACTIVATION_FUNCTION_DERIV[self.activation_function_name](
+                curr_z)
 
             delta = delta @ curr_theta * activation_derivate
 
@@ -128,32 +129,35 @@ class NeuralNetwork(object):
             velocity_list[idx] = np.zeros(velocity_list[idx].shape)
 
         num_features = x.shape[1]
-        mini_batches = self._create_batches(x, y, batch_size) #creating batches
+        mini_batches = self._create_batches(
+            x, y, batch_size)  # creating batches
 
         for _ in tqdm(range(iterations)):
 
             accuracy_for_batch = []
             error_for_batch = []
 
-            np.random.shuffle(mini_batches)
+            # np.random.shuffle(mini_batches)
             for mini_batch in mini_batches:
                 x_batch = mini_batch[:, :num_features]
                 y_batch = mini_batch[:, num_features:]
                 activations, z_list = self.forward_prop(x_batch)
                 soft_activation_output = softmax(activations[0])
-                accuracy_for_batch.append(accuracy_multiclass(soft_activation_output, y_batch))
+                accuracy_for_batch.append(accuracy_multiclass(
+                    soft_activation_output, y_batch))
 
-                error = categorical_cross_entropy(soft_activation_output, y_batch).mean()
+                error = categorical_cross_entropy(
+                    soft_activation_output, y_batch).mean()
                 error_for_batch.append(error)
 
                 gradients = self.back_prop(x_batch, y_batch, trained_thetas,
-                                               activations, soft_activation_output, z_list)
+                                           activations, soft_activation_output, z_list)
 
                 # update thetas
                 for idx in range(len(trained_thetas)):
                     velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
-                                                     lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
-                                            beta_val * velocity_list[-(idx + 1)]
+                                                         lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
+                        beta_val * velocity_list[-(idx + 1)]
                     trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
 
             accuracy_history.append(np.mean(accuracy_for_batch))
@@ -179,6 +183,7 @@ class NeuralNetwork(object):
 
         data_l = len(data)
         for index in range(0, data_l, batch_size):
-            batches.append(data[index:min(index + batch_size, data_l)]) #create batches with certain size, if not enough data available for last batch create batch with less data
+            # create batches with certain size, if not enough data available for last batch create batch with less data
+            batches.append(data[index:min(index + batch_size, data_l)])
 
         return np.array(batches, dtype=object)
