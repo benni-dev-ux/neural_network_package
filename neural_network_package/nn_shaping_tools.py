@@ -9,24 +9,6 @@ def add_bias_column(x):
     return np.c_[np.ones(len(x)), x]
 
 
-def concatenate_frames(X, frame_amount):
-    """
-    Concatenates next frames to row of current frame
-
-    """
-    combined_frames = X.loc[0:]
-    for i in range(1, frame_amount):
-        additional_frame = X.loc[i:].reset_index(drop=True)
-        combined_frames = pd.concat(
-            [combined_frames, additional_frame], axis=1)
-
-    # Delete Last n Rows
-    combined_frames.drop(combined_frames.tail(
-        frame_amount).index, inplace=True)
-    # Convert to numpy array
-    return combined_frames.values
-
-
 def initialize_random_thetas(shape):
     """
     initializes random set of thetas for a given shape
