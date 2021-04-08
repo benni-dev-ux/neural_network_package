@@ -30,20 +30,19 @@ def accuracy_multiclass(h, y):
 
 
 def f1_score(h, y):
-    #feature_list = np.arange(len(y[0]))
+    # feature_list = np.arange(len(y[0]))
     h = h.argmax(axis=1)
     y = y.argmax(axis=1)
-    true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y )
+    true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y)
 
-    precision = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_positives))
-    recall = np.sum(true_positives) / (np.sum(true_positives) + np.sum(false_negatives))
+    precision = true_positives / (true_positives + false_positives)
+    recall = true_positives / (true_positives + false_negatives)
 
     f1 = 2 * (precision * recall) / (precision + recall)
     return f1
 
 
 def plot_confusion_matrix(h, y):
-    #feature_list = np.arange(len(y[0]))
     h = h.argmax(axis=1)
     y = y.argmax(axis=1)
 
@@ -56,8 +55,8 @@ def plot_confusion_matrix(h, y):
     # visualize the confusion matrix
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    labels = ["true negatives\n %d", "false negatives\n %d",
-              "false positives\n %d", "true positives\n %d"]
+    labels = ["true negatives\nidentified idle correctly\n %d%%", "false negatives\n identified wrong idle \n %d%%",
+              "false positives\n identified wrong event \n%d%%", "true positives\n identified event correctly\n %d%%"]
     label_values = np.array([l % v for l, v in zip(
         labels, confusion_matrix.flat)]).reshape(2, 2)
 
@@ -82,12 +81,6 @@ def determine_true_false_positive_negative(h, y):
     # false negative = no event fired (idle), but there should be an event
     # true positive = correct event fired and not idle
     # true negative = identified idle correctly
-    #features=[0,1,2,3]
-    #for feature in features:
-    #   true_positives += (h == feature) & (y == feature)
-    #   false_positives += (h == feature) & (y != feature)
-    #   true_negatives += (h != feature) & (y != feature)
-    #   false_negatives += (h != feature) & (y == feature)
 
     num_samples = len(y)
     for sample_idx in range(num_samples):
@@ -97,13 +90,11 @@ def determine_true_false_positive_negative(h, y):
         event_fired = current_h_value != 0
 
         if event_fired:
-            #print("h == event")
             if current_y_value == current_h_value:
                 true_positives += 1
             else:
                 false_positives += 1
         else:
-            #print("h == idle")
             if current_y_value == 0:
                 true_negatives += 1
             else:
@@ -111,15 +102,3 @@ def determine_true_false_positive_negative(h, y):
 
     return true_positives, false_positives, true_negatives, false_negatives
 
-
-h = np.array([[1, 0, 0, 0], #false negative
-              [0, 1, 0, 0], #false positive
-              [0, 0, 1, 0], #true positive
-              [1, 0, 0, 0]])#true negative
-y = np.array([[0, 1, 0, 0],
-              [1, 0, 0, 0],
-              [0, 0, 1, 0],
-              [1, 0, 0, 0]])
-f1 = f1_score(h, y)
-acc = accuracy(h, y)
-plot_confusion_matrix(h,y)
