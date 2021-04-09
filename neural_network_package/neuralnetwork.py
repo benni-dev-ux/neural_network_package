@@ -13,8 +13,9 @@ class NeuralNetwork(object):
     Neural Network
     '''
 
-    def __init__(self, shape, thetas=None):
+    def __init__(self, shape, frame_amount, thetas=None):
         self.shape = shape
+        self.frame_amount = frame_amount
         self.activation_function_name = 'sigmoid'
 
         # Create random thetas if there are none
@@ -157,7 +158,7 @@ class NeuralNetwork(object):
                 for idx in range(len(trained_thetas)):
                     velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
                                                          lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
-                        beta_val * velocity_list[-(idx + 1)]
+                                                beta_val * velocity_list[-(idx + 1)]
                     trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
 
             accuracy_history.append(np.mean(accuracy_for_batch))
