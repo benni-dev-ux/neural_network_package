@@ -1,20 +1,37 @@
-import numpy as np
 from tqdm import tqdm
 
-from .nn_feature_scaling import *
-from .nn_shaping_tools import *
-from .nn_evaluation import *
-from .nn_cost_functions import *
 from .nn_activations import *
+from .nn_cost_functions import *
+from .nn_evaluation import *
+from .nn_shaping_tools import *
 
 
+def linear_regression(x, thetas):
+    """
+    calculates linear regression
+    """
+    return x @ thetas
 
+
+def logistic_regression(X, thetas):
+    """
+    calculates logistic regression
+    """
+    return sigmoid(linear_regression(X, thetas))
+
+
+def linear_logistic_regression_derivative(h, y, x):
+    """
+    calculates derivation for linear and logistic regression
+    """
+    m = len(x)
+    return (1 / m) * ((h - y) @ x)
 
 
 class NeuralNetwork(object):
-    '''
+    """
     Neural Network
-    '''
+    """
 
     def __init__(self, shape, thetas=None):
         self.shape = shape
@@ -109,8 +126,8 @@ class NeuralNetwork(object):
     def train(self, x, y, alpha, batch_size=32, epoch=100, lamda_value=0, beta_val=0):
         """
         Trains the NN through backpropagation
-        X_pizza: Input layer
-        Y_pizza: Outputs
+        x: Input layer
+        y: Outputs
         alpha: learning rate
         epoch: epoch
         batch: chunks of data going through
@@ -170,9 +187,9 @@ class NeuralNetwork(object):
 
     def predict(self, x):
         """
-        Predicts Y_pizza from given X_pizza and existing thetas
+        Predicts y from given x and existing thetas
         -----------
-        X_pizza: Input layer
+        x: Input layer
         returns: softmax of the output layer
 
         """
@@ -191,34 +208,38 @@ class NeuralNetwork(object):
 
         return np.array(batches)
 
-    def linear_regression(self, x, thetas):
-        return x @ thetas
-
-    def linear_logistic_regression_derivative(self, h, y, X):
-        m = len(X)
-        return (1 / m) * ((h - y) @ X)
-
     def train_linear_regression(self, x, y, alpha, iterations):
+        """
+        uses a linear regression to train thetas
+        x: Input layer
+        y: Outputs
+        alpha: learning rate
+        iterations: iterations
+        """
         optimized_thetas = self.thetas[0].flatten().copy()
         error_history = []
         for i in range(iterations):
-            h = self.linear_regression(x, optimized_thetas)
+            h = linear_regression(x, optimized_thetas)
             error = mse(h, y)
             error_history.append(error)
-            optimized_thetas -= alpha * self.linear_logistic_regression_derivative(h, y, x)
+            optimized_thetas -= alpha * linear_logistic_regression_derivative(h, y, x)
 
         return optimized_thetas, error_history
 
-    def logistic_regression(self, X, thetas):
-        return sigmoid(self.linear_regression(X, thetas))
-
     def train_logistic_regression(self, x, y, alpha, iterations):
+        """
+        uses a logistic regression to train thetas
+        x: Input layer
+        y: Outputs
+        alpha: learning rate
+        iterations: iterations
+        """
         trained_thetas = self.thetas[0].flatten().copy()
         error_history = []
         for i in range(iterations):
-            h = self.logistic_regression(x, trained_thetas)
+            h = logistic_regression(x, trained_thetas)
             error = cross_entropy(h, y)
             error_history.append(error)
-            trained_thetas -= alpha * self.linear_logistic_regression_derivative(h, y, x)
+            trained_thetas -= alpha * linear_logistic_regression_derivative(h, y, x)
 
         return trained_thetas, error_history
