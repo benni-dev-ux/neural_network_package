@@ -103,13 +103,13 @@ class NeuralNetwork(object):
 
         return gradient_list
 
-    def train(self, x, y, alpha, batch_size=32, iterations=100, lamda_value=0, beta_val=0):
+    def train(self, x, y, alpha, batch_size=32, epoch=100, lamda_value=0, beta_val=0):
         """
         Trains the NN through backpropagation
         X: Input layer
         Y: Outputs
         alpha: learning rate
-        iterations: iterations
+        epoch: epoch
         batch: chunks of data going through
         lambda_value: optional value, adds regularization
         beta_value: optional value, adds momentum, should be between 0.5 and 0.99
@@ -132,7 +132,7 @@ class NeuralNetwork(object):
         mini_batches = self._create_batches(
             x, y, batch_size)  # creating batches
 
-        for _ in tqdm(range(iterations)):
+        for _ in tqdm(range(epoch)):
 
             accuracy_for_batch = []
             error_for_batch = []

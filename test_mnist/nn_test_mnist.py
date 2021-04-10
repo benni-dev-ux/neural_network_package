@@ -5,7 +5,6 @@ import neural_network_package as nnp
 import mnist_downloader
 import numpy as np
 
-
 # %% Download MNIST Dataset
 
 download_folder = "./mnist/"
@@ -24,24 +23,35 @@ X_validation_scaled = scaler.transform(images_validation)
 
 # Add Bias to X
 X = nnp.add_bias_column(X_train_scaled)
+X_validation = nnp.add_bias_column(X_validation_scaled)
 
 # Defining Y Values as One-Hot-Vectors
 Y = np.identity(10, dtype=int)[labels_train]
+Y_validation = np.identity(10, dtype=int)[labels_validation]
 
 # %% Running the NeuralNet
-num_samples = 60000
+num_samples = 600
 alpha = 10
-iterations = 100
+epoch = 100
+batch_size = 10
+lamda_value = 0
+beta_val = 0
 
 # initialize a new neural net
 neural_net = nnp.NeuralNetwork([784, 20, 10])
+neural_net.set_activation_function("tanh")
 
-error_history, accuracy_history, gradients, softmax = neural_net.train(
-    X[:num_samples], Y[:num_samples], alpha, iterations)
+error_history, accuracy_history, gradients, softmax = neural_net.train(x=X[:num_samples], y=Y[:num_samples],
+                                                                       alpha=alpha, epoch=epoch)
 
-print("Accuracy ", accuracy_history[-1])
-print("Error ", error_history[-1])
+print("Accuracy Training ", accuracy_history[-1])
+print("Error Training ", error_history[-1])
+generated_trainig_result = neural_net.predict(X[:num_samples])
+print("F1 Training ", nnp.f1_score(generated_trainig_result, Y[:num_samples]))
 
-# %% Plot Data to image
-nnp.plot_history_to_image(error_history, "ERROR", "MNIST_Error.jpg")
-nnp.plot_history_to_image(accuracy_history, "ACCURACY", "MNIST_Accuracy.jpg")
+# %% Validate Training
+num_validation_samples = 100
+
+prediction_result = neural_net.predict(X_validation[:num_validation_samples])
+
+print("F1 Validation ", nnp.f1_score(prediction_result, Y_validation[:num_validation_samples]))
