@@ -28,11 +28,6 @@ def determine_true_false_positive_negative(h, y, true_negative_value):
     true_negatives = 0
     false_negatives = 0
 
-    # false positive = event fired, but idle or not right event
-    # false negative = no event fired (idle), but there should be an event
-    # true positive = correct event fired and not idle
-    # true negative = identified idle correctly
-
     num_samples = len(y)
     for sample_idx in range(num_samples):
         current_y_value = y[sample_idx]

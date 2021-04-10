@@ -2,6 +2,7 @@ import numpy as np
 
 
 def mse(h, y):
+    """Mean Squared Error Function for Linear Regression Problems"""
     return np.mean((h - y) ** 2)
 
 
@@ -18,7 +19,7 @@ def categorical_cross_entropy(h, y_one_hot):
 
 
 def softmax(o):
-    """ Softmax converts arbitrary outputs into probabilities with a sum of 1"""
+    """Softmax converts arbitrary outputs into probabilities with a sum of 1"""
     # normalize Data, otherwise too big to compute e**inf -> inf
     o_norm = o - np.nanmax(o, axis=1).reshape(-1, 1)
     exp = np.e ** o_norm
