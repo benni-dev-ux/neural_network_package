@@ -6,27 +6,6 @@ from .nn_evaluation import *
 from .nn_shaping_tools import *
 
 
-def linear_regression(x, thetas):
-    """
-    calculates linear regression
-    """
-    return x @ thetas
-
-
-def logistic_regression(X, thetas):
-    """
-    calculates logistic regression
-    """
-    return sigmoid(linear_regression(X, thetas))
-
-
-def linear_logistic_regression_derivative(h, y, x):
-    """
-    calculates derivation for linear and logistic regression
-    """
-    m = len(x)
-    return (1 / m) * ((h - y) @ x)
-
 
 class NeuralNetwork(object):
     """
@@ -197,7 +176,14 @@ class NeuralNetwork(object):
         return softmax(activations[0])
 
     @staticmethod
-    def _create_batches(x, y, batch_size):  # private method to create batches
+    def _create_batches(x, y, batch_size):
+        """
+        splits data into batches of certain size
+
+        x: data
+        y: ground_truth of data
+        batch_size: batch size
+        """
         data = np.hstack((x, y))
         batches = []
 
@@ -243,3 +229,25 @@ class NeuralNetwork(object):
             trained_thetas -= alpha * linear_logistic_regression_derivative(h, y, x)
 
         return trained_thetas, error_history
+
+
+def linear_regression(x, thetas):
+    """
+    calculates linear regression
+    """
+    return x @ thetas
+
+
+def logistic_regression(X, thetas):
+    """
+    calculates logistic regression
+    """
+    return sigmoid(linear_regression(X, thetas))
+
+
+def linear_logistic_regression_derivative(h, y, x):
+    """
+    calculates derivation for linear and logistic regression
+    """
+    m = len(x)
+    return (1 / m) * ((h - y) @ x)
