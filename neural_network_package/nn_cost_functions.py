@@ -1,6 +1,10 @@
 import numpy as np
 
 
+def mse(h, y):
+    return np.mean((h - y) ** 2)
+
+
 def cross_entropy(h, y):
     """Cross Entropy Loss Function"""
     h = np.clip(h, a_min=0.000000001, a_max=None)
@@ -22,4 +26,3 @@ def softmax(o):
     # clip, otherwise problems with .../0, but should not be necessary
     sum_all = np.clip(sum_all, a_min=0.000000001, a_max=None)
     return exp / sum_all
-

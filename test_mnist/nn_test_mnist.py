@@ -21,11 +21,11 @@ scaler.fit(images_train)
 X_train_scaled = scaler.transform(images_train)
 X_validation_scaled = scaler.transform(images_validation)
 
-# Add Bias to X
+# Add Bias to X_pizza
 X = nnp.add_bias_column(X_train_scaled)
 X_validation = nnp.add_bias_column(X_validation_scaled)
 
-# Defining Y Values as One-Hot-Vectors
+# Defining Y_pizza Values as One-Hot-Vectors
 Y = np.identity(10, dtype=int)[labels_train]
 Y_validation = np.identity(10, dtype=int)[labels_validation]
 
@@ -44,7 +44,8 @@ neural_net.set_activation_function("tanh")
 
 # train
 error_history, accuracy_history, gradients, softmax = neural_net.train(x=X, y=Y,
-                                                                       alpha=alpha, epoch=epoch, batch_size=batch_size, lamda_value=lamda_value, beta_val=beta_val)
+                                                                       alpha=alpha, epoch=epoch, batch_size=batch_size,
+                                                                       lamda_value=lamda_value, beta_val=beta_val)
 # console output
 print("Accuracy Training ", accuracy_history[-1])
 print("Error Training ", error_history[-1])

@@ -8,6 +8,9 @@ from .nn_cost_functions import *
 from .nn_activations import *
 
 
+
+
+
 class NeuralNetwork(object):
     '''
     Neural Network
@@ -39,7 +42,7 @@ class NeuralNetwork(object):
 
         Parameters:
         -----------
-        X: Input layer
+        X_pizza: Input layer
 
         returns activations list
         """
@@ -67,8 +70,8 @@ class NeuralNetwork(object):
         Backwards propagates the NN
         Parameters:
         -----------
-        X: Input layer
-        Y: Outputs
+        X_pizza: Input layer
+        Y_pizza: Outputs
         activations: Activations from forward Prop
         soft_activation: softmax of output layer
 
@@ -106,8 +109,8 @@ class NeuralNetwork(object):
     def train(self, x, y, alpha, batch_size=32, epoch=100, lamda_value=0, beta_val=0):
         """
         Trains the NN through backpropagation
-        X: Input layer
-        Y: Outputs
+        X_pizza: Input layer
+        Y_pizza: Outputs
         alpha: learning rate
         epoch: epoch
         batch: chunks of data going through
@@ -167,9 +170,9 @@ class NeuralNetwork(object):
 
     def predict(self, x):
         """
-        Predicts Y from given X and existing thetas
+        Predicts Y_pizza from given X_pizza and existing thetas
         -----------
-        X: Input layer
+        X_pizza: Input layer
         returns: softmax of the output layer
 
         """
@@ -187,3 +190,35 @@ class NeuralNetwork(object):
             batches.append(data[index:min(index + batch_size, data_l)])
 
         return np.array(batches)
+
+    def linear_regression(self, x, thetas):
+        return x @ thetas
+
+    def linear_logistic_regression_derivative(self, h, y, X):
+        m = len(X)
+        return (1 / m) * ((h - y) @ X)
+
+    def train_linear_regression(self, x, y, alpha, iterations):
+        optimized_thetas = self.thetas[0].flatten().copy()
+        error_history = []
+        for i in range(iterations):
+            h = self.linear_regression(x, optimized_thetas)
+            error = mse(h, y)
+            error_history.append(error)
+            optimized_thetas -= alpha * self.linear_logistic_regression_derivative(h, y, x)
+
+        return optimized_thetas, error_history
+
+    def logistic_regression(self, X, thetas):
+        return sigmoid(self.linear_regression(X, thetas))
+
+    def train_logistic_regression(self, x, y, alpha, iterations):
+        trained_thetas = self.thetas[0].flatten().copy()
+        error_history = []
+        for i in range(iterations):
+            h = self.logistic_regression(x, trained_thetas)
+            error = cross_entropy(h, y)
+            error_history.append(error)
+            trained_thetas -= alpha * self.linear_logistic_regression_derivative(h, y, x)
+
+        return trained_thetas, error_history
