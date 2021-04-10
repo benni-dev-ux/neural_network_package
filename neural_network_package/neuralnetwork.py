@@ -186,4 +186,4 @@ class NeuralNetwork(object):
             # create batches with certain size, if not enough data available for last batch create batch with less data
             batches.append(data[index:min(index + batch_size, data_l)])
 
-        return np.array(batches, dtype=object)
+        return np.array(batches)
