@@ -4,9 +4,9 @@ from mnist.loader import MNIST
 import neural_network_package as nnp
 import mnist_downloader
 import numpy as np
+import matplotlib.pyplot as plt
 
 # %% Download MNIST Dataset
-
 download_folder = "./mnist/"
 mnist_downloader.download_and_unzip(download_folder)
 
@@ -30,28 +30,38 @@ Y = np.identity(10, dtype=int)[labels_train]
 Y_validation = np.identity(10, dtype=int)[labels_validation]
 
 # %% Running the NeuralNet
-num_samples = 600
+
+# define hyperparameter
 alpha = 10
-epoch = 100
-batch_size = 10
-lamda_value = 0
-beta_val = 0
+epoch = 5
+batch_size = 300
+lamda_value = 0.1
+beta_val = 0.3
 
 # initialize a new neural net
 neural_net = nnp.NeuralNetwork([784, 20, 10])
 neural_net.set_activation_function("tanh")
 
-error_history, accuracy_history, gradients, softmax = neural_net.train(x=X[:num_samples], y=Y[:num_samples],
-                                                                       alpha=alpha, epoch=epoch)
-
+# train
+error_history, accuracy_history, gradients, softmax = neural_net.train(x=X, y=Y,
+                                                                       alpha=alpha, epoch=epoch, batch_size=batch_size, lamda_value=lamda_value, beta_val=beta_val)
+# console output
 print("Accuracy Training ", accuracy_history[-1])
 print("Error Training ", error_history[-1])
-generated_trainig_result = neural_net.predict(X[:num_samples])
-print("F1 Training ", nnp.f1_score(generated_trainig_result, Y[:num_samples]))
+generated_trainig_result = neural_net.predict(X)
+print("F1 Training ", nnp.f1_score(generated_trainig_result, Y))
+
+# %% Plot Training Progress
+fig, ax = plt.subplots()
+ax.plot(error_history, label="Error")
+ax.set_xlabel("Iterations")
+ax.set_ylabel("Error")
+ax.set_title("Error History")
+fig.legend()
+fig.tight_layout()
+plt.show()
 
 # %% Validate Training
-num_validation_samples = 100
 
-prediction_result = neural_net.predict(X_validation[:num_validation_samples])
-
-print("F1 Validation ", nnp.f1_score(prediction_result, Y_validation[:num_validation_samples]))
+prediction_result = neural_net.predict(X_validation)
+print("F1 Validation ", nnp.f1_score(prediction_result, Y_validation))
