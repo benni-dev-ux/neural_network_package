@@ -13,9 +13,8 @@ class NeuralNetwork(object):
     Neural Network
     '''
 
-    def __init__(self, shape, frame_amount, thetas=None):
+    def __init__(self, shape, thetas=None):
         self.shape = shape
-        self.frame_amount = frame_amount
         self.activation_function_name = 'sigmoid'
 
         # Create random thetas if there are none
