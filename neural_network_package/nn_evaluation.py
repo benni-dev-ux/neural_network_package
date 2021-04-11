@@ -2,14 +2,17 @@ import numpy as np
 
 
 def accuracy(h, y):
+    """calculates accuracy for binary classification"""
     return np.mean(np.round(h) == y)
 
 
 def accuracy_multiclass(h, y):
+    """calculates accuracy for multiclass classification"""
     return (h.argmax(axis=1) == y.argmax(axis=1)).mean()
 
 
 def f1_score(h, y, true_negative_value=0):
+    """calculates the accuracy from the precision and recall of the test"""
     h = h.argmax(axis=1)
     y = y.argmax(axis=1)
     true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y,
