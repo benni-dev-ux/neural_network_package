@@ -102,14 +102,14 @@ class NeuralNetwork(object):
 
         return gradient_list
 
-    def train(self, x, y, alpha, batch_size=32, epoch=100, lamda_value=0, beta_val=0):
+    def train(self, x, y, alpha, batch_size, epochs, lamda_value=0, beta_value=0):
         """
         Trains the NN through backpropagation
-        x: Input layer
-        y: Outputs
+        x : dataset as numpy array
+        y : ground truth as one hot vectors
         alpha: learning rate
-        epoch: epoch
-        batch: chunks of data going through
+        batch_size: number of training examples present in a single batch
+        epochs: number of iterations over full dataset
         lambda_value: optional value, adds regularization
         beta_value: optional value, adds momentum, should be between 0.5 and 0.99
 
@@ -131,7 +131,7 @@ class NeuralNetwork(object):
         mini_batches = self._create_batches(
             x, y, batch_size)  # creating batches
 
-        for _ in tqdm(range(epoch)):
+        for _ in tqdm(range(epochs)):
 
             accuracy_for_batch = []
             error_for_batch = []
@@ -156,7 +156,7 @@ class NeuralNetwork(object):
                 for idx in range(len(trained_thetas)):
                     velocity_list[-(idx + 1)] = alpha * (gradients[idx] +
                                                          lamda_value / num_samples * trained_thetas[-(idx + 1)]) + \
-                                                beta_val * velocity_list[-(idx + 1)]
+                                                beta_value * velocity_list[-(idx + 1)]
                     trained_thetas[-(idx + 1)] -= velocity_list[-(idx + 1)]
 
             accuracy_history.append(np.mean(accuracy_for_batch))
@@ -197,10 +197,10 @@ class NeuralNetwork(object):
     def train_linear_regression(self, x, y, alpha, iterations):
         """
         uses a linear regression to train thetas
-        x: Input layer
-        y: Outputs
-        alpha: learning rate
-        iterations: iterations
+        x : dataset as numpy array
+        y : ground truth as numpy array
+        alpha : learning rate
+        iterations : number of iterations over full dataset
         """
         optimized_thetas = self.thetas[0].flatten().copy()
         error_history = []

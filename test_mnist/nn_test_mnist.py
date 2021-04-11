@@ -44,8 +44,8 @@ neural_net.set_activation_function("tanh")
 
 # train
 error_history, accuracy_history, gradients, softmax = neural_net.train(x=X, y=Y,
-                                                                       alpha=alpha, epoch=epoch, batch_size=batch_size,
-                                                                       lamda_value=lamda_value, beta_val=beta_val)
+                                                                       alpha=alpha, epochs=epoch, batch_size=batch_size,
+                                                                       lamda_value=lamda_value, beta_value=beta_val)
 # console output
 print("Accuracy Training ", accuracy_history[-1])
 print("Error Training ", error_history[-1])
