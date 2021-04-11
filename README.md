@@ -124,7 +124,7 @@ To evaluate the performance of the network, there are several functions that can
    - h : prediction results (as softmax)
    - y : ground truth as one hot vectors
 
-` accuracy = nnp.accuracy_multiclass(h, y)`
+   ` accuracy = nnp.accuracy_multiclass(h, y)`
 
 2. F1 Score
    
