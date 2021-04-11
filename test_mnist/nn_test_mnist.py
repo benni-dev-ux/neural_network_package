@@ -33,7 +33,7 @@ Y_validation = np.identity(10, dtype=int)[labels_validation]
 
 # define hyperparameter
 alpha = 10
-epoch = 5
+epoch = 25
 batch_size = 300
 lamda_value = 0.1
 beta_val = 0.3
