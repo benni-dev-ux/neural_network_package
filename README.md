@@ -99,7 +99,7 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
    - alpha : learning rate
    - iterations : number of iterations over full dataset
 
-   ` trained_thetas, error_history = neural_net.train_logistic_regression(x, y, alpha, iterations`
+   ` trained_thetas, error_history = neural_net.train_logistic_regression(x, y, alpha, iterations)`
 
 ## Using Linear Regression
 
@@ -116,7 +116,7 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
    - alpha : learning rate
    - iterations : number of iterations over full dataset
 
-   ` trained_thetas, error_history = neural_net.train_linear_regression(x, y, alpha, iterations`
+   ` trained_thetas, error_history = neural_net.train_linear_regression(x, y, alpha, iterations)`
 
 ## Evaluation
 
