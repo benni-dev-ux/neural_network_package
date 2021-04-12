@@ -16,12 +16,12 @@ Neural Network Package for the Machine Learning Course in WS20 Group 07
 
    ` nnp.test()`
 
-
 ## Data Preparation for Machine Learning
 
 ### Feature Scaling
+
 1. Create a scaler and fit it according to the training data (x). Two scalers are available:
-   
+
    - NormalScaler: Rescale values so that each feature's minimum value is 0 and their maximum value is 1
    - StandardScaler: Centers data around zero with standard derivation of 1. It is more robust with outliers
 
@@ -30,12 +30,13 @@ Neural Network Package for the Machine Learning Course in WS20 Group 07
    ` scaler.fit(x)`
 
 2. Transform your data using the initialized scaler
-   
+
    ` x_scaled = scaler.transform(x)`
 
 ### Add Bias Column
+
 3. To use this package for machine learning, it is necessary to add a bias column to the training data before training.
-   
+
    ` X = nnp.add_bias_column(x_scaled)`
 
 ## Using Neural Networks
@@ -45,12 +46,13 @@ Neural Network Package for the Machine Learning Course in WS20 Group 07
 
    ` neural_net = nnp.NeuralNetwork([input_layer_size, hidden_layer_size, output_layer_size])`
 
-2. Set an activation function to a specific function, otherwise sigmoid will be used for training. 'sigmoid', 'relu' or 'tanh' are valid parameters.
+2. Set an activation function to a specific function, otherwise sigmoid will be used for training. Valid parameters are 'sigmoid', 'relu' or 'tanh'.
    ` neural_net.set_activation_function( activation_function_name)`
 
 3. Train the neural network with given inputs, ground truth and various hyperparameters.
-   
+
    hyperparameters:
+
    - x : dataset as numpy array
    - y : ground truth as one hot vectors
    - alpha : learning rate
@@ -71,7 +73,7 @@ See nn_test_mnist.py for an exemplary usage of the network with the MNIST datase
 
 ### With Neural Network
 
-1. Instantiate a new neural network with the wanted shape
+1. Instantiate a new neural network with the desired shape
    (first position = input layer (number of features), last postion = ouput layer).
 
    ` neural_net = nnp.NeuralNetwork([input_layer_size, output_layer_size = 2])`
@@ -91,6 +93,7 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
 2. Train the neural network with given inputs, ground truth and various hyperparameters.
 
    hyperparameters:
+
    - x : dataset as numpy array
    - y : ground truth as numpy array
    - alpha : learning rate
@@ -107,6 +110,7 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
 2. Train the neural network with given inputs, ground truth and various hyperparameters.
 
    hyperparameters:
+
    - x : dataset as numpy array
    - y : ground truth as numpy array
    - alpha : learning rate
@@ -116,21 +120,23 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
 
 ## Evaluation
 
-To evaluate the performance of the network, there are several functions that can be used.
+There are several functions that can be used, to evaluate the performance of the network.
 
 1. Accuracy for multiclass classification
-   
+
    parameters:
+
    - h : prediction results (as softmax)
    - y : ground truth as one hot vectors
 
    ` accuracy = nnp.accuracy_multiclass(h, y)`
 
 2. F1 Score
-   
+
    The F1 score calculates the accuracy from the precision and recall of the prediction results.
-   
+
    parameters:
+
    - h : prediction results (as softmax)
    - y : ground truth as one hot vectors
    - true_negative_value : value that should be considered as true_negative, for example 0
@@ -138,10 +144,10 @@ To evaluate the performance of the network, there are several functions that can
    ` f1_score = nnp.f1_score(h, y, true_negative_value)`
 
 3. Accuracy for binary classification
-   
+
    parameters:
+
    - h : prediction results (as one dimensional numpy array)
    - y : ground truth (as one dimensional numpy array)
 
    ` accuracy = nnp.accuracy(h, y)`
-
