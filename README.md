@@ -120,7 +120,7 @@ See nn_test_regression.py for an exemplary usage of linear and logistic regressi
 
 ## Evaluation
 
-There are several functions that can be used, to evaluate the performance of the network.
+There are several functions that can be used to evaluate the performance of the network.
 
 1. Accuracy for multiclass classification
 
