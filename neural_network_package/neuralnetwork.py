@@ -187,10 +187,16 @@ class NeuralNetwork(object):
         data = np.hstack((x, y))
         batches = []
 
-        data_l = len(data)
-        for index in range(0, data_l, batch_size):
-            # create batches with certain size, if not enough data available for last batch create batch with less data
-            batches.append(data[index:min(index + batch_size, data_l)])
+        if isinstance(batch_size, type([])):
+            curr_row_num = 0
+            for index in batch_size:
+                batches.append(data[curr_row_num:index + curr_row_num])
+                curr_row_num = index
+        else:
+            data_l = len(data)
+            for index in range(0, data_l, batch_size):
+                # create batches with certain size, if not enough data available for last batch create batch with less data
+                batches.append(data[index:min(index + batch_size, data_l)])
 
         return np.array(batches)
 
