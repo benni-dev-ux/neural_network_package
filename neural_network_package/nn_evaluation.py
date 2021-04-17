@@ -18,7 +18,8 @@ def f1_score(h, y, true_negative_value=0):
     true_positives, false_positives, true_negatives, false_negatives = determine_true_false_positive_negative(h, y,
                                                                                                               true_negative_value)
 
-    if true_positives + false_positives <= 0 or true_positives + false_negatives <= 0:
+    if true_positives == 0:
+        print("no true positives")
         return 0
     precision = true_positives / (true_positives + false_positives)
     recall = true_positives / (true_positives + false_negatives)
