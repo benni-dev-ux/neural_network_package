@@ -38,9 +38,9 @@ class NeuralNetwork(object):
 
         Parameters:
         -----------
-        X_pizza: Input layer
+        x: Input layer
 
-        returns activations list
+        returns activations list, z-list
         """
         z_list = []
         activations = []
@@ -66,10 +66,12 @@ class NeuralNetwork(object):
         Backwards propagates the NN
         Parameters:
         -----------
-        X_pizza: Input layer
-        Y_pizza: Outputs
+        x: Input layer
+        y: Outputs
+        thetas: thetas
         activations: Activations from forward Prop
         soft_activation: softmax of output layer
+        z_list: z from forward propagation
 
         returns gradients list
         """
@@ -129,14 +131,13 @@ class NeuralNetwork(object):
 
         num_features = x.shape[1]
         mini_batches = self._create_batches(
-            x, y, batch_size)  # creating batches
+            x, y, batch_size)
 
         for _ in tqdm(range(epochs)):
 
             accuracy_for_batch = []
             error_for_batch = []
 
-            # np.random.shuffle(mini_batches)
             for mini_batch in mini_batches:
                 x_batch = mini_batch[:, :num_features]
                 y_batch = mini_batch[:, num_features:]
