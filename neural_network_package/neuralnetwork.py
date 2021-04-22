@@ -183,7 +183,7 @@ class NeuralNetwork(object):
 
         x: data
         y: ground_truth of data
-        batch_size: batch size
+        batch_size: batch size as number or list
         """
         data = np.hstack((x, y))
         batches = []
