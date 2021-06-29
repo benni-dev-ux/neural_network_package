@@ -7,4 +7,4 @@ from .nn_activations import *
 
 
 def test():
-    print("nn_framework_group_seven succesfully found")
+    print("Neural Network Framework found")
