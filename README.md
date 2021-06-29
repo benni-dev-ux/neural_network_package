@@ -1,4 +1,5 @@
-# Neural Network Package - Python Machine learning Framework
+# Neural Network Package
+## Python Machine learning Framework
 A Machine Learning Framework for mutliclass classifictaion problems built 100% in Python using NumPy.
 
 
